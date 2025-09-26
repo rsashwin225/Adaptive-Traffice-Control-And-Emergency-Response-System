@@ -1,0 +1,411 @@
+{% comment %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signal Optimization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #007BFF;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .message {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            color: #555;
+            text-align: center;
+        }
+
+        .chart-container {
+            max-width: 600px;
+            max-height: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Traffic Signal Optimization</h1>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Upload Video 1:</label>
+        <input type="file" name="video1"><br><br>
+
+        <label>Upload Video 2:</label>
+        <input type="file" name="video2"><br><br>
+
+        <label>Upload Video 3:</label>
+        <input type="file" name="video3"><br><br>
+
+        <label>Upload Video 4:</label>
+        <input type="file" name="video4"><br><br>
+
+        <button type="submit">Start Monitoring</button>
+    </form>
+    <div class="message">
+        {% for signal_time in signal_times %}
+        <p>Signal Time for Video {{ loop.index }}: {{ signal_time }} seconds</p>
+        {% endfor %}
+    </div>
+
+    {% if signal_times %}
+        <h2>Results</h2>
+        <canvas id="trafficChart"></canvas>
+
+        <script>
+            var ctx = document.getElementById('trafficChart').getContext('2d');
+
+            var videoLabels = {{ video_labels|safe }};
+            var vehicleCounts = {{ vehicle_counts|safe }};
+            var signalTimes = {{ signal_times|safe }};
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: videoLabels,
+                    datasets: [
+                        {
+                            label: 'Vehicle Count',
+                            data: vehicleCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Signal Time (s)',
+                            data: signalTimes,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+    
+</body>
+</html> {% endcomment %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signal Optimization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form styles */
+        form {
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #007BFF;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        /* Processed image */
+        .processed-image {
+            margin-top: 20px;
+        }
+
+        .processed-image h3 {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 5px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Prediction and safety message */
+        .message {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            color: #555;
+        }
+
+        .message p {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        /* Graph container */
+        .chart-container {
+            max-width: 600px;
+            max-height: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Traffic Signal Optimization</h1>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Upload Video 1:</label>
+        <input type="file" name="video1"><br><br>
+
+        <label>Upload Video 2:</label>
+        <input type="file" name="video2"><br><br>
+
+        <label>Upload Video 3:</label>
+        <input type="file" name="video3"><br><br>
+
+        <label>Upload Video 4:</label>
+        <input type="file" name="video4"><br><br>
+
+        <button type="submit">Start Monitoring</button>
+    </form>
+    <div class="message">
+        {% for signal_time in signal_times %}
+        <p>Signal Time for Video {{ loop.index }}: {{ signal_time }} seconds</p>
+        {% endfor %}
+    </div>
+
+    {% if signal_times %}
+        <h2>Results</h2>
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+
+        {% comment %} <script>
+            var ctx = document.getElementById('trafficChart').getContext('2d');
+
+            var videoLabels = {{ video_labels|safe }};
+            var vehicleCounts = {{ vehicle_counts|safe }};
+            var signalTimes = {{ signal_times|safe }};
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: videoLabels,
+                    datasets: [
+                        {
+                            label: 'Vehicle Count',
+                            data: vehicleCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Signal Time (s)',
+                            data: signalTimes,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,  // Allows resizing
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script> {% endcomment %}
+        <script>
+            var ctx = document.getElementById('trafficChart').getContext('2d');
+        
+            var videoLabels = {{ video_labels|safe }};
+            var vehicleCounts = {{ vehicle_counts|safe }};
+            var signalTimes = {{ signal_times|safe }};
+        
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: videoLabels,
+                    datasets: [
+                        {
+                            label: 'Vehicle Count',
+                            data: vehicleCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Signal Time (s)',
+                            data: signalTimes,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+    
+</body>
+</html>

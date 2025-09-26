@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Vehicle Monitoring</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+
+        .container {
+            background-color: rgba(36, 34, 34, 0.8);
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form styles */
+        form {
+            margin: 20px 0;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        /* Monitoring results */
+        .results {
+            margin-top: 20px;
+            background-color:rgb(12, 11, 11);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            color: #555;
+        }
+
+        .results h2 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .results p {
+            font-size: 1.2em;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Live Vehicle Monitoring</h1>
+{% comment %} 
+    <form action="{% url 'Deploy_11' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="submit">Live Monitoring</button>
+    </form>  {% endcomment %}
+    <form action="{% url 'Deploy_8' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="submit">Ambulance Monitoring </button>
+    </form>
+
+    {% if vehicle_count is not None %}
+    <div class="results">
+        <h2>Results</h2>
+        <p><strong>Detected Vehicles:</strong> {{ vehicle_count }}</p>
+        <p><strong>Recommended Signal Time:</strong> {{ signal_time }} seconds</p>
+    </div>
+    {% endif %}
+</div>
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signal Status</title>
+    <style>
+        .signal-light {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 20px;
+        }
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .red { background-color: red; }
+    </style>
+</head>
+<body>
+    <h2>Traffic Signal Status</h2>
+    <p>Vehicle Count: {{ vehicle_count }}</p>
+    <p>Signal Time: {{ signal_time }} seconds</p>
+    
+    <div class="signal-light {{ signal_color }}"></div>
+    
+    <p>{{ signal_status }}</p>
+</body> {% endcomment %}
+</html>
+
+</body>
+</html>
